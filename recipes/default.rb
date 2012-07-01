@@ -80,3 +80,10 @@ end
 link "/etc/transmission-daemon/settings.json" do
   to "#{node['transmission']['config_dir']}/settings.json"
 end
+
+# group that have permision to write to download_dir
+group "users" do
+  action :modify
+  members "debian-transmission"
+  append true
+end
