@@ -39,10 +39,10 @@ require 'transmission-simple'
 
 template "transmission-default" do
   case node['platform']
-  when "centos","redhat" 
-    path "/etc/sysconfig/transmission-daemon"
-  else 
-    path "/etc/default/transmission-daemon"
+    when "centos", "redhat"
+      path "/etc/sysconfig/transmission-daemon"
+    else
+      path "/etc/default/transmission-daemon"
   end
   source "transmission-daemon.default.erb"
   owner "root"
@@ -74,6 +74,9 @@ template "#{node['transmission']['config_dir']}/settings.json" do
   owner "root"
   group "root"
   mode "0644"
+  variables(:settings => {
+    'umask' => node['transmission']['umask'].to_i(8) # base 10 from octtal
+  })
   notifies :reload, "service[transmission]", :immediate
 end
 
